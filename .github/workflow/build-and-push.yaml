@@ -1,0 +1,19 @@
+name: Build and Copy Executable
+
+on:
+  push:
+    branches:
+      - main 
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build executable 
+      run: |
+        ./build.sh
+        ls -la

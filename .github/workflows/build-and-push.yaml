@@ -30,6 +30,8 @@ jobs:
         git clone https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ secrets.GIT_USERNAME }}/gesturepal.github.io.git
         cp dist/GesturePal gesturepal.github.io/
         cd gesturepal.github.io
+        git lfs track "GesturePal"
+        git add .gitattributes
         git add .
         git commit -m "Update executable"
         git push

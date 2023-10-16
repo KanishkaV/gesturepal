@@ -21,6 +21,8 @@ jobs:
     - name: Build executable 
       run: |
         ./build.sh
+        ls -la 
+        ls -la dist
     - name: Push to public repo
       run: |
         git config --global user.name "${{ secrets.GIT_USERNAME }}"

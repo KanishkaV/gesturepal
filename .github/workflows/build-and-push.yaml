@@ -12,7 +12,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-
+    - name: Grant execute permission
+      run: chmod +x ./build.sh
     - name: Build executable 
       run: |
         ./build.sh

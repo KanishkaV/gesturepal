@@ -7,7 +7,6 @@ import sys
 from table import Table
 from data_processing import Processor
 import json
-import pyautogui
 import subprocess
 from constants import GESTURE_DATA_DIRECTORY,DATASET_FRAME_LENGTH
 from datetime import datetime
@@ -72,7 +71,7 @@ class App:
         
 
     def setup_tab1(self):
-        self.table = Table(self.tab1, ["Item A", "Item B", "sh File", "Item D"], self.gestures)
+        self.table = Table(self.tab1, ["Windows Key Press", "Next slide","Previous slide","Maximize","Lock", "sh File"], self.gestures,test_callback=self.processor.do_action)
 
         next_row = self.tab1.grid_size()[1]
 

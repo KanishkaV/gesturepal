@@ -4,6 +4,7 @@ from tensorflow.keras.models import load_model
 from constants import DATASET_FRAME_LENGTH
 import numpy as np
 from datetime import datetime, timedelta
+import pyautogui
 
 class Processor:
     def __init__(self,parent):
@@ -55,48 +56,7 @@ class Processor:
         else:
             return np.zeros(126)               
         return np.concatenate([lh,rh])                
-        # if(results.multi_hand_landmarks):
-        #     x=0
-        #     for l in results.multi_hand_landmarks:
-        #         print(len(l.landmark))
-        #         x+=1
-        #     print(x)
-        # if(results.multi_handedness):
-        #     for hand in results.multi_handedness:
-        #         print(hand.classification[0].index)
-        # if(results.multi_hand_world_landmarks):
-        #     x=0
-        #     print(len(results.multi_hand_world_landmarks))
-        #     for l in results.multi_hand_world_landmarks:
-        #         print(len(l.landmark))
-        #         x+=1
-        #     print(x)
-        # print("-------------------")
-        # data = np.empty((0))
-        # 'multi_hand_landmarks', 'multi_hand_world_landmarks', 'multi_handedness'
-        # if results.pose_landmarks:
-        #     for landmark in results.pose_landmarks.landmark:
-        #             data=np.append(data,np.array([landmark.x,landmark.y,landmark.z,landmark.visibility]).flatten())
-        # else:
-        #     data=np.append(data,np.zeros(33*4))
-
-        # if results.right_hand_landmarks:
-        #     for landmark in results.right_hand_landmarks.landmark:
-        #             data=np.append(data,np.array([landmark.x,landmark.y,landmark.z]).flatten())
-        # else:
-        #     data=np.append(data,np.zeros(21*3))
-            
-        # if results.left_hand_landmarks:
-        #     for landmark in results.left_hand_landmarks.landmark:
-        #             data=np.append(data,np.array([landmark.x,landmark.y,landmark.z]).flatten())
-        # else:
-        #     data=np.append(data,np.zeros(21*3))
-            
-
-        # landmark_size = 258
-        # while len(data) < landmark_size:
-        #     data.append(0)
-        # return data
+  
     def get_points_of_hand(self,landmarks):
         data=np.empty((0))
         for landmark in landmarks.landmark:
@@ -109,22 +69,55 @@ class Processor:
     def predict(self,data):
         # return
         y=np.expand_dims(np.array(data), axis=0)
-        print(y.shape)
+        # print(y.shape)
         x=self.model.predict(y,verbose=0)
         # # print(data)
        
         res=np.argmax(x)
         accuracy=x[0][res]
         current_time=datetime.now()
-        if current_time-self.last_pred>=timedelta(seconds=5):
-        
-            if(accuracy>0.86):
+        if current_time-self.last_pred>=timedelta(seconds=2):
+            # print(accuracy)
+            if(accuracy>0.5):
                 self.parent.save_data("dtest/dtest.json",y.tolist())
-                print(accuracy)
-                print(res)
-                print(self.parent.gestures[res])
-                print("-------------")
+                # print(accuracy)
+                # print(res)
+                # print(self.parent.gestures[res])
+                # print("before call do action")
+                self.find_and_do_mapped_action(self.parent.gestures[res])
+                # print("-------------")
                 self.last_pred=datetime.now()
+    
+    def find_and_do_mapped_action(self,gesture):
+        print(gesture)
+        selected_map=None
+        for item in self.parent.table.rows:
+            print(item[0].get())
+            if item[0].get() == gesture:
+                selected_map = item
+            break
         
-
+        # print("selected_map - ",self.parent.table.rows)
+        if selected_map is None:
+            return
+        
+        self.do_action(selected_map[1].get(),selected_map[2].get())
+        
+    def do_action(self,action,sh_file):
+        if action=="Windows Key Press":
+             pyautogui.hotkey("win")
+        
+        elif action=="Next slide":
+            pyautogui.press("right")
+            
+        elif action=="Previous slide":
+            pyautogui.press("left")
+            
+        elif action=="Maximize":
+            pyautogui.hotkey('alt', 'F10')
+            
+        elif action=="Lock":
+            pyautogui.hotkey('win', 'l')
+        elif action=="sh File":
+            subprocess.run(["bash", selected_map[2].get()])
         

@@ -25,7 +25,7 @@ jobs:
 
     - name: Create Release and Upload Executable
       run: |
-        gh release create v1.0.2 dist/GesturePal --repo github.com/${{ secrets.GIT_USERNAME }}/gesturepal.github.io --title "Release v1.0.0" --notes "Automated release from GitHub Actions."
+        gh release create v1.1.0 dist/GesturePal --repo github.com/${{ secrets.GIT_USERNAME }}/gesturepal.github.io --title "Release v1.1.0" --notes "Automated release from GitHub Actions."
 
         git push
       

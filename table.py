@@ -5,11 +5,12 @@ import json
 from constants import TABLE_DATA_JSON_PATH
 
 class Table:
-    def __init__(self, parent, predefined_items, selector_values):
+    def __init__(self, parent, predefined_items, selector_values,test_callback=None):
         self.parent = parent
         self.predefined_items = predefined_items
         self.selector_values = selector_values
         self.rows = []
+        self.test_callback=test_callback
 
      
         tk.Label(self.parent, text="Gesture").grid(row=0, column=0)
@@ -43,7 +44,7 @@ class Table:
     
         browse_btn = tk.Button(self.parent, text="Browse", command=lambda: self.browse_file(file_entry),fg="#FFFFFF", state=tk.DISABLED)
         browse_btn.grid(row=row_number, column=3)
-        test_btn = tk.Button(self.parent, text="Test", state=tk.NORMAL,bg="#3A2AEE",fg="#FFFFFF")
+        test_btn = tk.Button(self.parent, text="Test",command=lambda:self.test_callback(col2.get(),file_entry.get()), state=tk.NORMAL,bg="#3A2AEE",fg="#FFFFFF")
         test_btn.grid(row=row_number, column=4)
 
         self.rows.append((col1, col2, file_entry, browse_btn))
@@ -117,3 +118,4 @@ class Table:
             file_entry.config(state=tk.NORMAL)
             file_entry.delete(0, tk.END)
             file_entry.insert(0, file_path)
+            
